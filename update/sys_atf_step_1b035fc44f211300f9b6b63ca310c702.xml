@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_atf_step">
+    <sys_atf_step action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <description>Run Server Side Validation Script</description>
+        <display_name>Run Server Side Script</display_name>
+        <inputs/>
+        <order>1</order>
+        <step_config display_value="Run Server Side Script">41de4a935332120028bc29cac2dc349a</step_config>
+        <sys_class_name>sys_atf_step</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-04-14 03:47:50</sys_created_on>
+        <sys_id>1b035fc44f211300f9b6b63ca310c702</sys_id>
+        <sys_mod_count>44</sys_mod_count>
+        <sys_name>Run Server Side Script</sys_name>
+        <sys_package display_value="FoodOrder" source="x_156372_foodorder">55ff0f044f211300f9b6b63ca310c7e0</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="FoodOrder">55ff0f044f211300f9b6b63ca310c7e0</sys_scope>
+        <sys_update_name>sys_atf_step_1b035fc44f211300f9b6b63ca310c702</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-04-15 06:45:37</sys_updated_on>
+        <table/>
+        <test display_value="FoodOrderUtilsUnitTest">75f21fc44f211300f9b6b63ca310c705</test>
+        <timeout/>
+    </sys_atf_step>
+    <sys_variable_value action="delete_multiple" query="document_key=1b035fc44f211300f9b6b63ca310c702"/>
+    <sys_variable_value action="INSERT_OR_UPDATE">
+        <document>sys_atf_step</document>
+        <document_key>1b035fc44f211300f9b6b63ca310c702</document_key>
+        <order>100</order>
+        <sys_class_name>sys_variable_value</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-04-14 03:47:50</sys_created_on>
+        <sys_id>ac295bc44f211300f9b6b63ca310c74d</sys_id>
+        <sys_mod_count>44</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-04-15 06:45:37</sys_updated_on>
+        <value>(function(outputs, steps, stepResult, assertEqual) {&#13;
+	&#13;
+	var insertNewOrder = function(){&#13;
+		var grO = new GlideRecord('x_156372_foodorder_order');&#13;
+		grO.initialize();&#13;
+		return grO.insert();&#13;
+	} ;&#13;
+	&#13;
+	describe('Order', function(){&#13;
+		&#13;
+		var foodOrderUtil;&#13;
+		&#13;
+		beforeEach(function(){&#13;
+			foodOrderUtil = new FoordOrderUtils();&#13;
+		});&#13;
+		&#13;
+		it('should be able to get list of Orders created by me', function(){&#13;
+			&#13;
+			var listOfRetrievedOrders;&#13;
+			var arrayOfRetrievedOrders;&#13;
+			&#13;
+			var arrayOfInseretOrders = [];&#13;
+			var listOfInsertedOrder;&#13;
+			&#13;
+			arrayOfInseretOrders.push(insertNewOrder().toString());&#13;
+			arrayOfInseretOrders.push(insertNewOrder().toString());&#13;
+			arrayOfInseretOrders.push(insertNewOrder().toString());&#13;
+			&#13;
+			listOfInsertedOrder = arrayOfInseretOrders.join(',');&#13;
+			&#13;
+			listOfRetrievedOrders  = foodOrderUtil.getListOfOrdersCreatedByMe();&#13;
+			arrayOfRetrievedOrders = listOfRetrievedOrders.split(',');&#13;
+			&#13;
+			expect(listOfRetrievedOrders).toMatch(arrayOfInseretOrders[0], arrayOfInseretOrders[1], [2]);&#13;
+		});&#13;
+	});&#13;
+	&#13;
+	&#13;
+	describe('Order', function(){&#13;
+		var foodOrderUtil;&#13;
+		var grFO;&#13;
+		&#13;
+		beforeEach(function(){&#13;
+			var insertedFoodOrderSysId = insertNewOrder();&#13;
+			grFO  = new GlideRecord('x_156372_foodorder_order');&#13;
+			grFO.get(insertedFoodOrderSysId);&#13;
+			&#13;
+			foodOrderUtil = new FoordOrderUtils(grFO);&#13;
+		});&#13;
+		&#13;
+		it( 'should be able to get true if Order was created by me ', function(){&#13;
+			expect(foodOrderUtil.isCurrentUserOrderCreator()).toBe(true);&#13;
+		});&#13;
+		&#13;
+		it ('should be able to get true if Order can be locked', function(){&#13;
+			expect(foodOrderUtil.canLockOrder()).toBe(true);&#13;
+		});&#13;
+		&#13;
+		it ('should be able to get false if Order has been already locked', function(){&#13;
+			foodOrderUtil.lockOrder();&#13;
+			&#13;
+			expect(foodOrderUtil.canLockOrder()).toBe(false);&#13;
+		});&#13;
+		&#13;
+		it ('should be able to lock Order', function(){&#13;
+			foodOrderUtil.lockOrder();&#13;
+			&#13;
+			expect(foodOrderUtil.isOrderLocked()).toBe(true);&#13;
+		});&#13;
+		&#13;
+		it('should be able to get true if Order can be deactivate', function(){&#13;
+			expect(foodOrderUtil.canDeactivateOrder()).toBe(true);&#13;
+		});&#13;
+		&#13;
+		it('should be able to get false if Order has been already deactivated', function(){&#13;
+			foodOrderUtil.deactivateOrder();&#13;
+			&#13;
+			expect(foodOrderUtil.canDeactivateOrder()).toBe(false);&#13;
+		});&#13;
+		&#13;
+		it('should be able to get true if Order is active', function(){&#13;
+			expect(foodOrderUtil.isOrderActive()).toBe(true);&#13;
+		});&#13;
+	});&#13;
+	&#13;
+})(outputs, steps, stepResult, assertEqual);&#13;
+jasmine.getEnv().execute();&#13;
+</value>
+        <variable display_value="">989d9e235324220002c6435723dc3484</variable>
+    </sys_variable_value>
+</record_update>

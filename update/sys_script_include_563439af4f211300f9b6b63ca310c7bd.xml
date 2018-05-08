@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_156372_foodorder.FoodUtils</api_name>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>FoodUtils</name>
+        <script><![CDATA[var FoodUtils = Class.create();
+FoodUtils.prototype = {
+    initialize: function() {
+    },
+	
+	getFoodOrder: function (foodOrderSysId){
+		var grFO = new GlideRecord('x_156372_foodorder_order');
+		grFO.get(foodOrderSysId);
+		
+		return grFO;
+	},
+    type: 'FoodUtils'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-04-24 17:27:07</sys_created_on>
+        <sys_id>563439af4f211300f9b6b63ca310c7bd</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>FoodUtils</sys_name>
+        <sys_package display_value="FoodOrder" source="x_156372_foodorder">55ff0f044f211300f9b6b63ca310c7e0</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="FoodOrder">55ff0f044f211300f9b6b63ca310c7e0</sys_scope>
+        <sys_update_name>sys_script_include_563439af4f211300f9b6b63ca310c7bd</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-04-24 17:45:05</sys_updated_on>
+    </sys_script_include>
+</record_update>

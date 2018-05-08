@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_156372_foodorder.FoordOrderUtils</api_name>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>FoordOrderUtils</name>
+        <script><![CDATA[var FoordOrderUtils = Class.create();
+FoordOrderUtils.prototype = {
+	initialize: function(foodOrderRecord) {
+		this._currentUserID = gs.getUserID();
+		this._gr = foodOrderRecord;
+	},
+	
+	getListOfOrdersCreatedByMe: function(){
+		var orders = [];
+		
+		var grOR = new GlideRecord('x_156372_foodorder_order');
+		grOR.addQuery('opened_by', this._currentUserID);
+		grOR.query();
+		
+		while( grOR.next() ){
+			orders.push(grOR.sys_id.toString());
+		}
+		return orders.join(',');
+	},
+	
+	isOrderLocked: function(){
+		return this._gr.getValue('locked') === '1';
+	},
+	
+	isCurrentUserOrderCreator:function(){
+		return this._gr.opened_by == this._currentUserID;
+	},
+	
+	canLockOrder: function(){
+		return ( this.isCurrentUserOrderCreator() && !this.isOrderLocked() );
+	},
+	
+	lockOrder:function(){
+		this._gr.setValue('locked', true);
+		this._gr.update();
+	},
+	
+	isOrderActive: function(){
+		return this._gr.getValue('active') === '1';
+	},
+	
+	canDeactivateOrder:function(){
+		return ( this.isCurrentUserOrderCreator() && this.isOrderActive() );
+	},
+	
+	deactivateOrder: function(){
+		this._gr.setValue('active',false);
+		this._gr.update();
+	},
+	
+	_updateTotalCostWithoutDelivery: function (cost) {
+		this._gr.setValue('total_cost_without_delivery', cost);
+		this._gr.update();
+	},
+	
+	calculateTotalCostWithoutDelivery: function () {
+		var sum = new GlideAggregate('x_156372_foodorder_order_item');
+		sum.addQuery('order', this._gr.sys_id);
+		sum.addAggregate('SUM', 'price');
+		sum.groupBy('price');
+		sum.query();
+		
+		var totalCost = 0;
+		
+		while ( sum.next() ){
+			totalCost += parseFloat(sum.getAggregate('SUM', 'price'));
+		}
+		
+		this._updateTotalCostWithoutDelivery(totalCost);
+	},
+	
+	isUserItemAlreadyAddedToOrder: function () {
+		var grFOI = new GlideRecord('x_156372_foodorder_order_item');
+		grFOI.addQuery('order', this._gr.sys_id);
+		grFOI.addQuery('for', gs.getUserID());
+		grFOI.setLimit(1);
+		grFOI.query();
+		
+		return grFOI.hasNext();
+	},
+	type: 'FoordOrderUtils'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2018-04-14 03:20:07</sys_created_on>
+        <sys_id>29b25bc44f211300f9b6b63ca310c744</sys_id>
+        <sys_mod_count>61</sys_mod_count>
+        <sys_name>FoordOrderUtils</sys_name>
+        <sys_package display_value="FoodOrder" source="x_156372_foodorder">55ff0f044f211300f9b6b63ca310c7e0</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_scope display_value="FoodOrder">55ff0f044f211300f9b6b63ca310c7e0</sys_scope>
+        <sys_update_name>sys_script_include_29b25bc44f211300f9b6b63ca310c744</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2018-04-26 18:17:11</sys_updated_on>
+    </sys_script_include>
+</record_update>
